@@ -1,5 +1,6 @@
+import Menu from "~/components/Menu";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +10,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  const [tableView, setTableView] = useState(true);
+  return (
+    <div className="bg-[#0f0f13] min-h-full flex flex-col">
+      <Menu tableView={tableView} setTableView={setTableView} />
+    </div>
+  );
 }
