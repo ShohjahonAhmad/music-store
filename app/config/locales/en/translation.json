@@ -1,0 +1,14 @@
+{
+    "header": {
+        "desc": "Music Showcase",
+        "table": "Table",
+        "gallery": "Gallery"
+    },
+    "toolbar": {
+        "language": "Language",
+        "seed": "SEED",
+        "random": "Random",
+        "likes": "Likes / Song",
+        "exportZip": "Export ZIP"
+    }
+}

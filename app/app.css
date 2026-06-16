@@ -69,6 +69,16 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 :root {
+  --color-background: #0f0f13;
+  --color-foreground: #f0f0f2;
+  --color-border: #2a2a35;
+  --color-primary: #1db954;
+  --color-primary-foreground: #000000;
+  --color-muted: #2a2a35;
+  --color-muted-foreground: #7a7a8c;
+  --color-accent: #a259ff;
+  --color-card: #17171f;
+  --color-surface: #1c1c24;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -101,6 +111,38 @@ input[type="number"]::-webkit-inner-spin-button {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+}
+
+.border-border {
+  border-color: var(--color-border);
+}
+
+.text-muted-foreground {
+  color: var(--color-muted-foreground);
+}
+
+.bg-muted-foreground {
+  background-color: var(--color-muted-foreground); 
+}
+
+.text-surface {
+  color: var(--color-surface);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-card {
+  background-color: var(--color-card);
+}
+
+.text-foreground {
+  color: var(--color-foreground);
+}
+
+.bg-muted {
+  background-color: var(--color-muted);
 }
 
 .dark {

@@ -1,0 +1,14 @@
+{
+    "header": {
+        "desc": "Muestra Musical",
+        "table": "Tabla",
+        "gallery": "Galería"
+    },
+    "toolbar": {
+        "language": "Idioma",
+        "seed": "Semilla",
+        "random": "Aleatorio",
+        "likes": "Me gusta / Canción",
+        "exportZip": "Exportar ZIP"
+    }
+}
