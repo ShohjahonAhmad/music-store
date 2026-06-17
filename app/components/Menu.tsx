@@ -12,7 +12,7 @@ export default function Menu({
 }) {
   const { t } = useTranslation();
   return (
-    <header className="w-full bg-[#17171f] border-b border-[#2a2a35] flex items-center justify-between px-8 py-3">
+    <header className="w-full bg-[#17171f] border-b border-[#2a2a35] flex flex-col lg:flex-row items-center justify-between px-8 py-3">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-md bg-[#1db954] flex items-center justify-center">
           <Logo />

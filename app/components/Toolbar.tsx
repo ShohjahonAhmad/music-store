@@ -11,11 +11,13 @@ export default function Toolbar({
   setSeed,
   likes,
   setLikes,
+  setLocale,
 }: {
   seed: bigint;
-  setSeed: React.Dispatch<React.SetStateAction<bigint>>;
+  setSeed: (newSeed: bigint) => void;
   likes: number;
-  setLikes: React.Dispatch<React.SetStateAction<number>>;
+  setLikes: (newLikes: number) => void;
+  setLocale: (newLocale: string) => void;
 }) {
   const { t, i18n } = useTranslation();
 
@@ -30,7 +32,10 @@ export default function Toolbar({
             <Globe />
             <select
               value={i18n.language}
-              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              onChange={(e) => {
+                setLocale(e.target.value);
+                i18n.changeLanguage(e.target.value);
+              }}
               className="flex items-center gap-1 bg-surface border border-border rounded-md px-3 py-1.5 text-sm text-foreground min-w-40"
             >
               <option value="en">English (USA)</option>

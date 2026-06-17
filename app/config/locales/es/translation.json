@@ -10,5 +10,11 @@
         "random": "Aleatorio",
         "likes": "Me gusta / Canción",
         "exportZip": "Exportar ZIP"
+    },
+    "table": {
+        "titleArtist": "TÍTULO / ARTISTA",
+        "album": "ÁLBUM",
+        "genre": "GÉNERO",
+        "likes": "ME GUSTA"
     }
 }

@@ -2,6 +2,9 @@ import Menu from "~/components/Menu";
 import type { Route } from "./+types/home";
 import { useState } from "react";
 import Toolbar from "~/components/Toolbar";
+import TableView from "~/components/TableView";
+import { useSearchParams } from "react-router";
+import getSongs from "~/api/getSongs";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,19 +13,65 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const searchParams = new URL(request.url).searchParams;
+  const page = Number(searchParams.get("page") || "1");
+  const likes = Number(searchParams.get("likes") || "3.5");
+  const seed = BigInt(searchParams.get("seed") || "123");
+  const locale = searchParams.get("locale") || "en";
+
+  return getSongs(page, seed, likes, locale);
+}
+
 export default function Home() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [tableView, setTableView] = useState(true);
-  const [seed, setSeed] = useState<bigint>(123n);
-  const [likes, setLikes] = useState<number>(3.7);
+
+  const page = Number(searchParams.get("page") || "1");
+  const likes = Number(searchParams.get("likes") || "3.5");
+  const seed = BigInt(searchParams.get("seed") || "123");
+
+  const setSeed = (newSeed: bigint) => {
+    setSearchParams((prev) => {
+      prev.set("seed", newSeed.toString());
+      prev.set("page", "1");
+      return prev;
+    });
+  };
+
+  const setLikes = (newLikes: number) => {
+    setSearchParams((prev) => {
+      prev.set("likes", newLikes.toString());
+      return prev;
+    });
+  };
+
+  const setLocale = (newLocale: string) => {
+    setSearchParams((prev) => {
+      prev.set("locale", newLocale);
+      prev.set("page", "1");
+      return prev;
+    });
+  };
+
+  const setPage = (newPage: number) => {
+    setSearchParams((prev) => {
+      prev.set("page", newPage.toString());
+      return prev;
+    });
+  };
+
   return (
-    <div className="bg-[#0f0f13] min-h-full flex flex-col">
+    <div className="bg-[#0f0f13] min-h-screen flex flex-col">
       <Menu tableView={tableView} setTableView={setTableView} />
       <Toolbar
         seed={seed}
         setSeed={setSeed}
         likes={likes}
         setLikes={setLikes}
+        setLocale={setLocale}
       />
+      <TableView page={page} setPage={setPage} seed={seed} />
     </div>
   );
 }
