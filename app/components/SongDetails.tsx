@@ -34,7 +34,7 @@ export default function SongDetails({
         title={song.title}
         artist={song.artist}
       />
-      <div className="flex flex-col gap-4 flex-1 pr-48">
+      <div className="flex flex-col gap-4 flex-1 pr-32">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
             {song.genre}
@@ -82,6 +82,18 @@ export default function SongDetails({
               <span>{convertSecondToMinute(duration)}</span>
             </div>
           </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          {song.reviews.map((review) => (
+            <div className="w-fit max-w-xl bg-card border border-border rounded-lg p-3">
+              <span className="mb-1.5 text-foreground font-medium">
+                {review.author}
+              </span>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {review.content}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
