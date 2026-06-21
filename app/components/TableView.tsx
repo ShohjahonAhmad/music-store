@@ -4,9 +4,10 @@ import { ChevronUpIcon, ChevronDownIcon, Play } from "lucide-react";
 import Back from "~/utils/Back";
 import Like from "~/utils/Like";
 import Next from "~/utils/Next";
-import { useRef, useState, Fragment } from "react";
+import { useRef, useState, Fragment, useEffect } from "react";
 import SongDetails from "./SongDetails";
 import type { Song } from "~/types/Song";
+import AlbumCover from "./AlbumCover";
 
 export default function TableView({
   page,
@@ -20,6 +21,36 @@ export default function TableView({
   const songs = useLoaderData<Song[]>();
   const { t } = useTranslation();
   const [expandedSong, setExpandedSong] = useState<number>(-1);
+  const [audioCache, setAudioCache] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    setExpandedSong(-1);
+  }, []);
+
+  useEffect(() => {
+    if (expandedSong === -1) {
+      return;
+    }
+    const key = `${seed}-${expandedSong}`;
+
+    if (audioCache[key]) return;
+    async function loadAudio(songIndex: number) {
+      const response = await fetch(
+        `http://localhost:8082/songs/audio?seed=${seed}&index=${songIndex}`
+      );
+
+      const blob = await response.blob();
+
+      const url = URL.createObjectURL(blob);
+
+      setAudioCache((prev) => ({
+        ...prev,
+        [`${seed}-${songIndex}`]: url,
+      }));
+    }
+
+    loadAudio(expandedSong);
+  }, [expandedSong, seed]);
 
   const toggleSong = (index: number) => {
     if (expandedSong === index) {
@@ -57,7 +88,12 @@ export default function TableView({
                   <td className="pl-8 py-3 w-8 px-2">{song.index}</td>
                   <td className="py-3 px-2">
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-md flex items-center justify-center overflow-hidden bg-amber-400"></div>
+                      <AlbumCover
+                        artist={song.artist}
+                        seed={`${seed}-${song.index}`}
+                        title={song.title}
+                        size={40}
+                      />
                       <div>
                         <p className="text-sm font-medium text-foreground truncate">
                           {song.title}
@@ -90,7 +126,11 @@ export default function TableView({
                 {expandedSong === song.index && (
                   <tr>
                     <td colSpan={6}>
-                      <SongDetails song={song} seed={seed} />
+                      <SongDetails
+                        song={song}
+                        seed={seed}
+                        audioCache={audioCache}
+                      />
                     </td>
                   </tr>
                 )}

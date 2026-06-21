@@ -1,4 +1,4 @@
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Loader } from "lucide-react";
 import { Slider } from "./ui/slider";
 import { useRef, useState } from "react";
 import type { Song } from "~/types/Song";
@@ -7,14 +7,17 @@ import AlbumCover from "./AlbumCover";
 export default function SongDetails({
   song,
   seed,
+  audioCache,
 }: {
   song: Song;
   seed: bigint;
+  audioCache: Record<string, string>;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(300);
+  const [duration, setDuration] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function togglePlay() {
     if (!audioRef.current) return;
@@ -24,8 +27,6 @@ export default function SongDetails({
     } else {
       audioRef.current.play();
     }
-
-    setIsPlaying((prev) => !prev);
   }
   return (
     <div className="p-6 bg-surface border-t border-border px-8 py-5 flex gap-8">
@@ -53,12 +54,21 @@ export default function SongDetails({
             ref={audioRef}
             onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
             onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+            onLoadStart={() => setIsLoading(true)}
+            onCanPlay={() => setIsLoading(false)}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onEnded={() => setIsPlaying(false)}
+            src={audioCache[`${seed}-${song.index}`]}
           />
           <button
+            disabled={isLoading}
             onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black cursor-pointer"
+            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isPlaying ? (
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : isPlaying ? (
               <Pause className="ml-0.5" />
             ) : (
               <Play className="ml-0.5" />
@@ -68,7 +78,7 @@ export default function SongDetails({
           <div className="flex-1">
             <Slider
               value={[currentTime]}
-              max={duration}
+              max={duration === -1 ? 0 : duration}
               step={1}
               onValueChange={(value) => {
                 if (audioRef.current) {
@@ -84,8 +94,11 @@ export default function SongDetails({
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          {song.reviews.map((review) => (
-            <div className="w-fit max-w-xl bg-card border border-border rounded-lg p-3">
+          {song.reviews.map((review, index) => (
+            <div
+              className="w-fit max-w-xl bg-card border border-border rounded-lg p-3"
+              key={index}
+            >
               <span className="mb-1.5 text-foreground font-medium">
                 {review.author}
               </span>
@@ -101,6 +114,7 @@ export default function SongDetails({
 }
 
 function convertSecondToMinute(second: number) {
+  if (second === -1) return "0:00";
   const minutes = Math.floor(second / 60);
   const seconds = Math.floor(second % 60);
   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
