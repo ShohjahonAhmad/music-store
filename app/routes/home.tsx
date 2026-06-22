@@ -1,6 +1,6 @@
 import Menu from "~/components/Menu";
 import type { Route } from "./+types/home";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Toolbar from "~/components/Toolbar";
 import TableView from "~/components/TableView";
 import { useSearchParams } from "react-router";

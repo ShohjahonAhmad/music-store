@@ -36,7 +36,7 @@ export default function TableView({
     if (audioCache[key]) return;
     async function loadAudio(songIndex: number) {
       const response = await fetch(
-        `http://localhost:8082/songs/audio?seed=${seed}&index=${songIndex}`
+        `https://music-store-backend-rho.vercel.app/songs/audio?seed=${seed}&index=${songIndex}`
       );
 
       const blob = await response.blob();

@@ -1,6 +1,6 @@
 export default async function getSongs( page: number, seed: bigint, likes: number, locale: string) {
     try {
-        const response = await fetch(`http://localhost:8082/songs?page=${page}&seed=${seed}&likes=${likes}&locale=${locale}`);
+        const response = await fetch(`https://music-store-backend-rho.vercel.app/songs?page=${page}&seed=${seed}&likes=${likes}&locale=${locale}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
