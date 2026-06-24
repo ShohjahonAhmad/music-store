@@ -68,7 +68,7 @@ export default function SongDetails({
             onClick={togglePlay}
             className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? (
+            {isLoading || duration <= 0 ? (
               <Loader className="animate-spin" />
             ) : isPlaying ? (
               <Pause className="ml-0.5" />
