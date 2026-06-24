@@ -96,7 +96,7 @@ export default function GallerySongCard({
       </div>
       <div className="px-4 py-3 flex flex-col gap-2">
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
+          <div className="w-[200px]">
             <p className="text-xs text-muted-foreground truncate">
               {song.album}
             </p>

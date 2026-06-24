@@ -73,7 +73,7 @@ export default function GalleryView({
       <div className="px-8 pt-2 pb-3 flex items-center gap-3">
         <div className="h-px flex-1 bg-border w-full"></div>
       </div>
-      <div className="px-8 pb-4 flex justify-between gap-4 flex-wrap">
+      <div className="px-8 pb-4 flex justify-center gap-4 flex-wrap">
         {fetchedSongs.map((song) => (
           <GallerySongCard
             key={`${locale}-${seed}-${song.index}`}
