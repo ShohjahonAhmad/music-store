@@ -3,6 +3,9 @@ import Random from "~/utils/Random";
 import { Slider } from "./ui/slider";
 import Export from "~/utils/Export";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import getExport from "~/api/getExport";
+import { Loader } from "lucide-react";
 
 const SEED_RANGE = 2n ** 64n - 1n;
 
@@ -11,15 +14,23 @@ export default function Toolbar({
   setSeed,
   likes,
   setLikes,
+  locale,
   setLocale,
+  tableView,
+  page,
 }: {
   seed: bigint;
   setSeed: (newSeed: bigint) => void;
   likes: number;
   setLikes: (newLikes: number) => void;
+  locale: string;
   setLocale: (newLocale: string) => void;
+  tableView: boolean;
+  page: number;
 }) {
   const { t, i18n } = useTranslation();
+  const [localLikes, setLocalLikes] = useState(likes);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="w-full bg-card border-b border-border px-8 py-3 flex justify-between items-center gap-6 lg:flex-row flex-col">
@@ -71,8 +82,9 @@ export default function Toolbar({
           <div className="flex items-center gap-3 bg-surface border border-border rounded-md px-3 py-1.5">
             <span className="text-xs">0</span>
             <Slider
-              value={[likes]}
-              onValueChange={(value) => setLikes(value[0])}
+              value={[localLikes]}
+              onValueChange={(value) => setLocalLikes(value[0])}
+              onValueCommit={(value) => setLikes(value[0])}
               min={0}
               max={10}
               step={0.1}
@@ -80,17 +92,41 @@ export default function Toolbar({
             />
             <span className="text-xs">10</span>
             <span className="text-sm font-medium text-foreground ml-1 border-l border-border pl-3">
-              {likes}
+              {localLikes}
             </span>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <button className="flex items-center gap-2 px-3 py-1.5 bg-surface hover:bg-[#7a7a8c] hover:text-[#1c1c24] border border-border rounded-md text-sm text-muted-foreground cursor-pointer">
-          <Export />
-          {t("toolbar.exportZip")}
-        </button>
-      </div>
+      {tableView && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={async () => {
+              setIsLoading(true);
+              try {
+                const blob = await getExport(seed, locale, page);
+
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "songs.zip";
+                a.click();
+
+                URL.revokeObjectURL(url);
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 bg-surface hover:bg-[#7a7a8c] hover:text-[#1c1c24] border border-border rounded-md text-sm text-muted-foreground cursor-pointer"
+          >
+            <Export />
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              t("toolbar.exportZip")
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

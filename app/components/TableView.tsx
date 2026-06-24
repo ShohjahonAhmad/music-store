@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
-import { ChevronUpIcon, ChevronDownIcon, Play } from "lucide-react";
+import { ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import Back from "~/utils/Back";
 import Like from "~/utils/Like";
 import Next from "~/utils/Next";
-import { useRef, useState, Fragment, useEffect } from "react";
+import { useState, Fragment, useEffect } from "react";
 import SongDetails from "./SongDetails";
 import type { Song } from "~/types/Song";
 import AlbumCover from "./AlbumCover";
@@ -13,10 +13,12 @@ export default function TableView({
   page,
   setPage,
   seed,
+  locale,
 }: {
   page: number;
   setPage: (newPage: number) => void;
   seed: bigint;
+  locale: string;
 }) {
   const songs = useLoaderData<Song[]>();
   const { t } = useTranslation();
@@ -25,18 +27,19 @@ export default function TableView({
 
   useEffect(() => {
     setExpandedSong(-1);
-  }, []);
+    setAudioCache({});
+  }, [locale, page, seed]);
 
   useEffect(() => {
     if (expandedSong === -1) {
       return;
     }
-    const key = `${seed}-${expandedSong}`;
+    const key = `${locale}-${seed}-${expandedSong}`;
 
     if (audioCache[key]) return;
     async function loadAudio(songIndex: number) {
       const response = await fetch(
-        `https://music-store-backend-rho.vercel.app/songs/audio?seed=${seed}&index=${songIndex}`
+        `https://music-store-backend-rho.vercel.app/songs/audio?seed=${seed}&index=${songIndex}&locale=${locale}`
       );
 
       const blob = await response.blob();
@@ -45,12 +48,12 @@ export default function TableView({
 
       setAudioCache((prev) => ({
         ...prev,
-        [`${seed}-${songIndex}`]: url,
+        [key]: url,
       }));
     }
 
     loadAudio(expandedSong);
-  }, [expandedSong, seed]);
+  }, [expandedSong, seed, locale]);
 
   const toggleSong = (index: number) => {
     if (expandedSong === index) {
@@ -65,17 +68,17 @@ export default function TableView({
         <table className="w-full border-collapse text-xs text-muted-foreground">
           <thead className="border-b border-border bg-background px-8 uppercase">
             <tr>
-              <th className="pl-8 py-2 w-8 px-2">#</th>
-              <th className=" tracking-widest py-2 px-2 text-left">
+              <th className="pl-8 py-2 px-2 w-[5%]">#</th>
+              <th className=" tracking-widest py-2 px-2 text-left w-[50%]">
                 {t("table.titleArtist")}
               </th>
-              <th className=" tracking-widest py-2 px-2 text-left">
+              <th className=" tracking-widest py-2 px-2 text-left w-[15%]">
                 {t("table.album")}
               </th>
-              <th className=" tracking-widest py-2 px-2 text-left">
+              <th className=" tracking-widest py-2 px-2 text-left w-[15%]">
                 {t("table.genre")}
               </th>
-              <th className=" tracking-widest py-2 px-2 pr-8 text-left">
+              <th className=" tracking-widest py-2 px-2 pr-8 text-left w-[10%]">
                 {t("table.likes")}
               </th>
               <th></th>
@@ -127,6 +130,7 @@ export default function TableView({
                   <tr>
                     <td colSpan={6}>
                       <SongDetails
+                        locale={locale}
                         song={song}
                         seed={seed}
                         audioCache={audioCache}

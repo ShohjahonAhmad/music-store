@@ -9,11 +9,13 @@ export default function GallerySongCard({
   setPlayingSong,
   song,
   seed,
+  locale,
 }: {
   playingSong: number | null;
   setPlayingSong: React.Dispatch<React.SetStateAction<number | null>>;
   song: Song;
   seed: bigint;
+  locale: string;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +30,7 @@ export default function GallerySongCard({
       setIsLoading(true);
 
       const response = await fetch(
-        `https://music-store-backend-rho.vercel.app/songs/audio?seed=${seed}&index=${song.index}`
+        `https://music-store-backend-rho.vercel.app/songs/audio?seed=${seed}&index=${song.index}&locale=${locale}`
       );
 
       const blob = await response.blob();

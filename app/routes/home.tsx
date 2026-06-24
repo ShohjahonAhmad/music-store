@@ -1,6 +1,5 @@
 import Menu from "~/components/Menu";
 import type { Route } from "./+types/home";
-import { useState } from "react";
 import Toolbar from "~/components/Toolbar";
 import TableView from "~/components/TableView";
 import { useSearchParams } from "react-router";
@@ -26,12 +25,21 @@ export function clientLoader({ request }: Route.ClientLoaderArgs) {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tableView, setTableView] = useState(true);
 
+  const tableViewParam = searchParams.get("view") || "true";
+  const tableView = tableViewParam === "true" ? true : false;
   const page = Number(searchParams.get("page") || "1");
   const likes = Number(searchParams.get("likes") || "3.5");
   const locale = searchParams.get("locale") || "en";
   const seed = BigInt(searchParams.get("seed") || "123");
+
+  const setTableView = (newView: boolean) => {
+    setSearchParams((prev) => {
+      prev.set("view", newView ? "true" : "false");
+      prev.set("page", "1");
+      return prev;
+    });
+  };
 
   const setSeed = (newSeed: bigint) => {
     setSearchParams((prev) => {
@@ -71,18 +79,15 @@ export default function Home() {
         setSeed={setSeed}
         likes={likes}
         setLikes={setLikes}
+        locale={locale}
         setLocale={setLocale}
+        tableView={tableView}
+        page={page}
       />
       {tableView ? (
-        <TableView page={page} setPage={setPage} seed={seed} />
+        <TableView page={page} setPage={setPage} seed={seed} locale={locale} />
       ) : (
-        <GalleryView
-          seed={seed}
-          setPage={setPage}
-          page={page}
-          locale={locale}
-          likes={likes}
-        />
+        <GalleryView seed={seed} locale={locale} likes={likes} />
       )}
     </div>
   );

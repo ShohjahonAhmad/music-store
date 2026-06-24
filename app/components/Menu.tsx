@@ -8,7 +8,7 @@ export default function Menu({
   setTableView,
 }: {
   tableView: boolean;
-  setTableView: React.Dispatch<React.SetStateAction<boolean>>;
+  setTableView: (newView: boolean) => void;
 }) {
   const { t } = useTranslation();
   return (

@@ -8,10 +8,12 @@ export default function SongDetails({
   song,
   seed,
   audioCache,
+  locale,
 }: {
   song: Song;
   seed: bigint;
   audioCache: Record<string, string>;
+  locale: string;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -59,7 +61,7 @@ export default function SongDetails({
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             onEnded={() => setIsPlaying(false)}
-            src={audioCache[`${seed}-${song.index}`]}
+            src={audioCache[`${locale}-${seed}-${song.index}`]}
           />
           <button
             disabled={isLoading}

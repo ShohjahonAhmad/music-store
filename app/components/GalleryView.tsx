@@ -7,14 +7,10 @@ import getSongs from "~/api/getSongs";
 
 export default function GalleryView({
   seed,
-  page,
-  setPage,
   locale,
   likes,
 }: {
   seed: bigint;
-  page: number;
-  setPage: (newPage: number) => void;
   locale: string;
   likes: number;
 }) {
@@ -45,10 +41,11 @@ export default function GalleryView({
   }, []);
 
   useEffect(() => {
+    setPlayingSong(null);
     setGalleryPage(1);
     setFetchedSongs(songs);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [songs]);
+  }, [songs, seed, locale, likes]);
 
   useEffect(() => {
     if (galleryPage === 1) return;
@@ -79,9 +76,10 @@ export default function GalleryView({
       <div className="px-8 pb-4 flex justify-between gap-4 flex-wrap">
         {fetchedSongs.map((song) => (
           <GallerySongCard
-            key={song.index}
+            key={`${locale}-${seed}-${song.index}`}
             song={song}
             seed={seed}
+            locale={locale}
             playingSong={playingSong}
             setPlayingSong={setPlayingSong}
           />
