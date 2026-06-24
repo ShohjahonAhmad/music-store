@@ -16,5 +16,9 @@
         "album": "ALBUM",
         "genre": "GENRE",
         "likes": "LIKES"
+    },
+    "gallery": {
+        "title": "Browse Songs",
+        "subtitle": "Scroll down to discover more"
     }
 }

@@ -5,6 +5,7 @@ import Toolbar from "~/components/Toolbar";
 import TableView from "~/components/TableView";
 import { useSearchParams } from "react-router";
 import getSongs from "~/api/getSongs";
+import GalleryView from "~/components/GalleryView";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -29,6 +30,7 @@ export default function Home() {
 
   const page = Number(searchParams.get("page") || "1");
   const likes = Number(searchParams.get("likes") || "3.5");
+  const locale = searchParams.get("locale") || "en";
   const seed = BigInt(searchParams.get("seed") || "123");
 
   const setSeed = (newSeed: bigint) => {
@@ -71,7 +73,17 @@ export default function Home() {
         setLikes={setLikes}
         setLocale={setLocale}
       />
-      <TableView page={page} setPage={setPage} seed={seed} />
+      {tableView ? (
+        <TableView page={page} setPage={setPage} seed={seed} />
+      ) : (
+        <GalleryView
+          seed={seed}
+          setPage={setPage}
+          page={page}
+          locale={locale}
+          likes={likes}
+        />
+      )}
     </div>
   );
 }

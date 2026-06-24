@@ -160,6 +160,10 @@ input[type="number"]::-webkit-inner-spin-button {
 .border-border {
   border-color: var(--color-border);
 }
+
+.bg-border {
+  background-color: var(--color-border);
+}
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

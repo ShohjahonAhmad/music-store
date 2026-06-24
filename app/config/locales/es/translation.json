@@ -16,5 +16,10 @@
         "album": "ÁLBUM",
         "genre": "GÉNERO",
         "likes": "ME GUSTA"
+    },
+
+    "gallery": {
+        "title": "Explorar Canciones",
+        "subtitle": "Desplázate hacia abajo para descubrir más"
     }
 }
